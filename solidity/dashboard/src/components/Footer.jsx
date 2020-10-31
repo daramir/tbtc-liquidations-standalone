@@ -2,16 +2,16 @@ import React from "react"
 import * as Icons from "./Icons"
 
 const socialMedia = [
-  { label: "Twitter", url: "https://twitter.com/keep_project" },
-  { label: "Telegram", url: "https://t.me/KeepNetworkOfficial" },
-  { label: "Reddit", url: "https://www.reddit.com/r/KeepNetwork" },
-]
+  // { label: "Twitter", url: "https://twitter.com/keep_project" },
+  // { label: "Telegram", url: "https://t.me/KeepNetworkOfficial" },
+  // { label: "Reddit", url: "https://www.reddit.com/r/KeepNetwork" },
+  { label: "Discord", url: "https://chat.keep.network/" },
+];
 
 const aboutUs = [
   { label: "Whitepaper", url: "https://keep.network/whitepaper" },
-  { label: "Team", url: "https://keep.network/#team" },
-  { label: "Advisors", url: "https://keep.network/#advisors" },
-  { label: "Blog", url: "https://blog.keep.network/" },
+  { label: "Docs", url: "https://docs.keep.network/tbtc/index.html#liquidation"},
+  { label: "More Docs", url: "https://bisontrails.co/keep-active-participation/"}
 ]
 
 const Footer = () => {
@@ -21,6 +21,7 @@ const Footer = () => {
       <ul>{aboutUs.map(renderFooterLinkItem)}</ul>
       <ul>{socialMedia.map(renderFooterLinkItem)}</ul>
       <div className="signature text-smaller text-grey-70">
+        <div>(a fork of)</div>
         <div>A Thesis* Build</div>
         <div>© 2020 Keep, SEZC. All Rights Reserved.</div>
       </div>

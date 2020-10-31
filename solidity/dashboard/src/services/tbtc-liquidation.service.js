@@ -131,13 +131,13 @@ const depositNotifySignatureTimeout = async (
       from: web3Context.yourAddress,
     })
     .on("receipt", function (receipt) {
-      console.log(
-        `notifySignatureTimeout on Deposit ${depositContractAddress} was successful.`
-      )
+      // console.log(
+      //   `notifySignatureTimeout on Deposit ${depositContractAddress} was successful.`
+      // )
       return receipt
     })
     .on("error", function (error, receipt) {
-      console.log(error.message)
+      console.error(error.message)
       console.log(
         `notifySignatureTimeout on Deposit ${depositContractAddress} failed.`
       )
@@ -159,13 +159,13 @@ const depositNotifyRedemptionProofTimedOut = async (
       from: web3Context.yourAddress,
     })
     .on("receipt", function (receipt) {
-      console.log(
-        `notifyRedemptionProofTimedOut on Deposit ${depositContractAddress} was successful.`
-      )
+      // console.log(
+      //   `notifyRedemptionProofTimedOut on Deposit ${depositContractAddress} was successful.`
+      // )
       return receipt
     })
     .on("error", function (error, receipt) {
-      console.log(error.message)
+      console.error(error.message)
       console.log(
         `notifyRedemptionProofTimedOut on Deposit ${depositContractAddress} failed.`
       )
@@ -204,9 +204,6 @@ const getDepositSizeSatoshis = async (web3Context, depositContractAddress) => {
   const depositUtxoValue = await depositContractInstance.methods
     .utxoValue()
     .call()
-  if (`${depositLotSizeSatoshis}` !== `${depositUtxoValue}`) {
-    console.log(`--Diff in deposit size-----\n${depositLotSizeSatoshis}\n${depositUtxoValue}\n--Diff in deposit size-----\n`)
-  }
   return depositUtxoValue
 }
 
@@ -242,7 +239,7 @@ const purchaseDepositAtAuction = async (
     web3,
     depositContractAddress
   )
-  console.log(depositContractInstance)
+  // console.log(depositContractInstance)
 
   try {
     const { tbtcTokenContract } = await ContractsLoaded
@@ -275,7 +272,7 @@ const purchaseDepositAtAuction = async (
       .on("transactionHash", onTransactionHashCallback)
 
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
 
@@ -327,8 +324,8 @@ const getDepositAuctionOfferingSchedule = async (
     .initialCollateralizedPercent()
     .call() //uint16 
   const baseAuctionPercentage = web3Utils.toBN(10000).div(web3Utils.toBN(initialCollateralizedPercent)) // Remarks (1)
-  console.log(`initialCollateralizedPercent: ${initialCollateralizedPercent}`)
-  console.log(`baseAuctionPercentage: ${baseAuctionPercentage}`)
+  // console.log(`initialCollateralizedPercent: ${initialCollateralizedPercent}`)
+  // console.log(`baseAuctionPercentage: ${baseAuctionPercentage}`)
 
   const depositEthBalance = await getDepositEthBalance(web3Context, depositContractAddress)
   const bnHundred = web3Utils.toBN(100)
@@ -339,7 +336,6 @@ const getDepositAuctionOfferingSchedule = async (
     amountOnOffer: web3Utils.toBN(depositEthBalance).mul(baseAuctionPercentage).div(bnHundred),
     releasedInTimestamp: startedLiquidationTimestamp
   }
-  console.log(`offeringSchedule[0]`)
 
   for (let index = baseAuctionPercentage.toNumber() + 1; index <= 100; index++) {
     const releaseSlotIndex = index - baseAuctionPercentage
@@ -368,12 +364,12 @@ const getTBtcBalanceOf = async (
   web3Context
 ) => {
   const arbitrageurAddress = web3Context.yourAddress
-  console.log(`arbitrageurAddress: ${arbitrageurAddress}`)
+  // console.log(`arbitrageurAddress: ${arbitrageurAddress}`)
   const { tbtcTokenContract } = await ContractsLoaded
   const arbitrageurBalanceOf = await tbtcTokenContract.methods
     .balanceOf(arbitrageurAddress)
     .call()
-  console.log(`arbitrageurBalanceOf: ${arbitrageurBalanceOf}`)
+  // console.log(`arbitrageurBalanceOf: ${arbitrageurBalanceOf}`)
   return arbitrageurBalanceOf
 }
 
