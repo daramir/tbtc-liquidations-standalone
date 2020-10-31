@@ -1,6 +1,6 @@
 {
-  "short_name": "KEEP Token Dashboard",
-  "name": "KEEP Token Dashboard",
+  "short_name": "KEEP Liquidations",
+  "name": "KEEP Deposit Auctions",
   "icons": [
     {
       "src": "favicon.ico",
