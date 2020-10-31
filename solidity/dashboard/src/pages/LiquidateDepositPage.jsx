@@ -58,7 +58,7 @@ const LiquidateDepositPage = (props) => {
         () => {
           refreshData()
           setLastRefreshedMoment(moment())
-          console.log(`I refreshed at ${moment().toString()}`)
+          // console.log(`I refreshed at ${moment().toString()}`)
         },
         75000
         // 15000
