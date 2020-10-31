@@ -35,10 +35,10 @@ class Routing extends React.Component {
       <Loadable />
     ) : (
       <Switch>
-        <Route path="/tokens" component={TokensPageContainer} />
-        <Route exact path="/operations" component={OperatorPage} />
+        {/* <Route path="/tokens" component={TokensPageContainer} />
+        <Route exact path="/operations" component={OperatorPage} /> */}
         <Route path="/liquidations" component={LiquidationsPageContainer} />
-        <Route path="/rewards" component={RewardsPageContainer} />
+        {/* <Route path="/rewards" component={RewardsPageContainer} />
         <Route exact path="/token-grants" component={TokenGrantsPage} />
         <Route path="/applications" component={ApplicationsPageContainer} />
         {isKeepTokenContractDeployer && (
@@ -47,9 +47,9 @@ class Routing extends React.Component {
             path="/create-token-grants"
             component={CreateTokenGrantPage}
           />
-        )}
+        )} */}
         <Route exact path="/">
-          <Redirect to="/tokens" />
+          <Redirect to="/liquidations" />
         </Route>
         <Route path="*">
           <NotFound404 />
