@@ -32,8 +32,8 @@ export const ArbitrageurTokenDetails = ({
         amountClassName="h1 text-grey-70"
         suffixClassName="h2"
         displayWithMetricSuffix={false}
-        // Hardcoded "4" since the smaller relevant decimal is 3 based on current lot sizes
-        displayAmountFunction={displayAmountHigherOrderFn(false,4)}
+        // Hardcoded "4" since the smaller relevant decimal is 3, based on current lot sizes
+        displayAmountFunction={displayAmountHigherOrderFn(true, 4, 1)}
         amount={tokenValue} />
     </section>
   )

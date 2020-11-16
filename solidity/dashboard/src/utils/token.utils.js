@@ -16,16 +16,26 @@ export function displayAmount(amount, withCommaSeparator = true) {
   return 0
 }
 
-export function displayAmountHigherOrderFn(withCommaSeparator = true, formatDecimalPlaces = 0) {
+export function displayAmountHigherOrderFn(withCommaSeparator = true, formatDecimalPlaces = 0, formatScientificDecimals = 3) {
   return (amount) => {
     if (amount) {
       const readableFormat = toTokenUnit(amount)
       return withCommaSeparator
-        ? readableFormat.toFormat(formatDecimalPlaces, BigNumber.ROUND_DOWN)
+        ? bigNumberFormatWithDecimalPlaces(readableFormat, formatDecimalPlaces, formatScientificDecimals, BigNumber.ROUND_DOWN)
         : readableFormat.toString()
     }
     return 0
   }
+}
+
+function bigNumberFormatWithDecimalPlaces(prmAmt, decimalPlaces, scientificDecimalPlaces, roundingMode) {
+  let scientificThreshold =  new BigNumber(1).div(new BigNumber(10).pow(new BigNumber(decimalPlaces)))
+  const bnTokenUnitAmnt = new BigNumber(prmAmt)
+  if(bnTokenUnitAmnt.lt(scientificThreshold))
+  {
+    return bnTokenUnitAmnt.toExponential(scientificDecimalPlaces, roundingMode)
+  }
+  else return bnTokenUnitAmnt.toFormat(decimalPlaces, roundingMode)
 }
 
 /**
