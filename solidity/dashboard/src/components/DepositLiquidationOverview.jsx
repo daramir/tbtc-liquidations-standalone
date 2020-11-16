@@ -29,7 +29,7 @@ export const ArbitrageurTokenDetails = ({
       </div>
       <TokenAmount
         currencyIcon={Icons.TBTC}
-        amountClassName="h1 text-grey-70"
+        amountClassName="h1 text-grey-70 span-token-amount"
         suffixClassName="h2"
         displayWithMetricSuffix={false}
         // Hardcoded "4" since the smaller relevant decimal is 3, based on current lot sizes
@@ -85,7 +85,7 @@ export const DepositAuctionOverview = (props) => {
           className="tile deposit-liquidation-overview"
           style={{ marginBottom: "1.2rem" }}
         >
-          <div className="grant-amount">
+          <div className="arb-balance">
             <ArbitrageurTokenDetails title="Your tBTC Balance" tokenValue={tBtcBalance} />
           </div>
 
@@ -143,8 +143,8 @@ export const DepositAuctionOverview = (props) => {
           className="tile deposit-liquidation-overview"
           style={{ marginBottom: "1.2rem" }}
         >
-          <div className="grant-amount ">
-            <ArbitrageurTokenDetails title="Your tBTC Balance" tokenValue={tBtcBalance} />
+          <div className="arb-balance">
+            <ArbitrageurTokenDetails title="Your TBTC Balance" tokenValue={tBtcBalance} />
           </div>
 
           <div className="unlocking-details">
