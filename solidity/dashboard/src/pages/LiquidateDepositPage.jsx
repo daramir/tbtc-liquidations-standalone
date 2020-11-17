@@ -208,7 +208,6 @@ const LiquidateDepositPage = (props) => {
     }
   }
 
-
   //TODO: Fix first section. Conditional should be at a higher level and check if it is a deposit.
   // If it's not in liquidation (has ever been) it will fail startedLiquidationEvent.returnValues
   return (
