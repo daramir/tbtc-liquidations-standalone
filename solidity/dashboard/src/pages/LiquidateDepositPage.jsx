@@ -133,21 +133,21 @@ const LiquidateDepositPage = (props) => {
   // startRefreshDataTimer()
 
   const confirmationModalOptions = useCallback(() => {
-    if (bondAmountIsFetching || depositSizeSatoshisIsFetching)
+    if (currentAuctionValueIsFetching || depositSizeSatoshisIsFetching)
       return {}
     else {
       return {
         modalOptions: { title: "Purchase ETH Bond" },
         title: "You’re about to purchase ETH with tBTC.",
         subtitle:
-          `This transaction will spend ${satsToTBtcViaWeitoshi(depositSizeSatoshis).toString()} tBTC to obtain ${displayAmount(bondAmountWei, false)} ETH (or more, depending on the block it goes through).
+          `This transaction will spend ${satsToTBtcViaWeitoshi(depositSizeSatoshis).toString()} tBTC to obtain ${displayAmount(auctionValueBN, false)} ETH (or more, depending on the block it goes through).
            It can fail if deposit state changes before this transaction gets accepted. 
            Transaction can also fail if you don’t have enough tBTC`,
         btnText: "Purchase ETH",
         confirmationText: "Y",
       }
     }
-  }, [satsToTBtcViaWeitoshi, displayAmount, bondAmountIsFetching, depositSizeSatoshisIsFetching]) 
+  }, [currentAuctionValueIsFetching, depositSizeSatoshisIsFetching, auctionValueBN, depositSizeSatoshis]) 
 
   const getPercentageOnOffer = useCallback(() => {
     const utils = web3Context.web3.utils
