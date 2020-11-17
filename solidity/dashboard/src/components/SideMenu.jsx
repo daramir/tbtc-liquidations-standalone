@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react"
 import { Link, useRouteMatch } from "react-router-dom"
 import { Web3Status } from "./Web3Status"
 import { Web3Context } from "./WithWeb3Context"
-import { ContractsDataContext } from "./ContractsDataContextProvider"
+// import { ContractsDataContext } from "./ContractsDataContextProvider"
 import AddressShortcut from "./AddressShortcut"
 import { NetworkStatus } from "./NetworkStatus"
 import * as Icons from "./Icons"
@@ -26,7 +26,6 @@ export const SideMenuProvider = (props) => {
 export const SideMenu = (props) => {
   const { isOpen } = useContext(SideMenuContext)
   const { yourAddress, provider } = useContext(Web3Context)
-  const { isKeepTokenContractDeployer } = useContext(ContractsDataContext)
 
   const isDisabled = !yourAddress || !provider
 

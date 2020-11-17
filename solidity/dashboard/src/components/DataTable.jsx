@@ -63,7 +63,6 @@ export class DataTable extends React.Component {
       title,
       titleClassName,
       titleStyle,
-      cellStyle,
       withTooltip,
       tooltipProps,
       subtitle,

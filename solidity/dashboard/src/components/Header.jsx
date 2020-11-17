@@ -1,5 +1,5 @@
 import React, { useContext } from "react"
-import * as Icons from "./Icons"
+// import * as Icons from "./Icons"
 import { Web3Context } from "./WithWeb3Context"
 import { Web3Status } from "./Web3Status"
 import { MenuButton } from "./MenuButton"

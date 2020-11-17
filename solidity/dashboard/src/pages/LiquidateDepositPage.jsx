@@ -1,21 +1,19 @@
-import React, { useMemo, useCallback, useState, useEffect } from "react"
+import React, { 
+  // useMemo,
+  useCallback, useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import FallingPriceAuctionTable from "../components/FallingPriceAuctionTable"
 import StatusBadge, { BADGE_STATUS } from "../components/StatusBadge"
 import { useTokensPageContext } from "../contexts/TokensPageContext"
 import {
-  ArbitrageurTokenDetails, DepositAuctionOverview
+  // ArbitrageurTokenDetails,
+   DepositAuctionOverview
 } from "../components/DepositLiquidationOverview"
-import { TokenGrantSkeletonOverview } from "../components/skeletons/TokenOverviewSkeleton"
-import AddressShortcut from "../components/AddressShortcut"
-import { isSameEthAddress } from "../utils/general.utils"
-import { add } from "../utils/arithmetics.utils"
 import moment from "moment"
 import { LoadingOverlay } from "../components/Loadable"
 import DataTableSkeleton from "../components/skeletons/DataTableSkeleton"
-import PageWrapper from "../components/PageWrapper"
 import { ViewAddressInBlockExplorer } from "../components/ViewInBlockExplorer"
-import { SubmitButton } from "../components/Button"
+// import { SubmitButton } from "../components/Button"
 import { useShowMessage, messageType } from "../components/Message"
 import { useWeb3Context } from "../components/WithWeb3Context"
 import { liquidationService } from "../services/tbtc-liquidation.service"
@@ -25,19 +23,14 @@ import {
   satsToTBtcViaWeitoshi,
   displayAmount
 } from "../utils/token.utils"
-import { colors } from "../constants/colors"
+// import { colors } from "../constants/colors"
 
 const LiquidateDepositPage = (props) => {
   const {
-    undelegations,
-    delegations,
     tokensContext,
-    selectedGrant,
     isFetching,
     grantsAreFetching,
-    keepTokenBalance,
-    availableTopUps,
-    grants,
+
   } = useTokensPageContext()
 
 
@@ -47,28 +40,6 @@ const LiquidateDepositPage = (props) => {
   const { openConfirmationModal } = useModal()
 
   const [lastRefreshedMoment, setLastRefreshedMoment] = useState(moment())
-
-  useEffect(
-    () => {
-      setTimeout(
-        () => {
-          refreshData()
-          setLastRefreshedMoment(moment())
-          // console.log(`I refreshed at ${moment().toString()}`)
-        },
-        75000
-        // 15000
-      )
-    },
-    [lastRefreshedMoment]
-  )
-  // startRefreshDataTimer()
-
-  const refreshData = () => {
-    refreshCurrentAuctionValue()
-    refreshUserTBtcBalance()
-    refreshDepositState()
-  }
 
   const [stCurrentAuctionValue, , refreshCurrentAuctionValue] = useFetchData(
     liquidationService.getDepositCurrentAuctionValue,
@@ -98,7 +69,6 @@ const LiquidateDepositPage = (props) => {
     data: depositStateObj,
   } = stDepositState
 
-
   const [stAuctionSchedule] = useFetchData(
     liquidationService.getDepositAuctionOfferingSchedule,
     {},
@@ -115,7 +85,7 @@ const LiquidateDepositPage = (props) => {
   )
   const {
     isFetching: lastStartedLiquidationEventIsFetching,
-    data: startedLiquidationEvent,
+    // data: startedLiquidationEvent,
   } = stLastStartedLiquidationEvent
 
   const [stDepositBondAmount] = useFetchData(
@@ -137,6 +107,30 @@ const LiquidateDepositPage = (props) => {
     isFetching: depositSizeSatoshisIsFetching,
     data: depositSizeSatoshis,
   } = stDepositSizeSatoshis
+
+  const refreshData = useCallback(
+    () => {
+    refreshCurrentAuctionValue()
+    refreshUserTBtcBalance()
+    refreshDepositState()
+  },
+  [refreshCurrentAuctionValue, refreshUserTBtcBalance, refreshDepositState]
+  )
+  useEffect(
+    () => {
+      setTimeout(
+        () => {
+          refreshData()
+          setLastRefreshedMoment(moment())
+          // console.log(`I refreshed at ${moment().toString()}`)
+        },
+        75000
+        // 15000
+      )
+    },
+    [lastRefreshedMoment, refreshData]
+  )
+  // startRefreshDataTimer()
 
   const confirmationModalOptions = useCallback(() => {
     if (bondAmountIsFetching || depositSizeSatoshisIsFetching)
@@ -168,26 +162,26 @@ const LiquidateDepositPage = (props) => {
 
   const showMessage = useShowMessage()
 
-  const onLiquidateFromSummaryBtn = async () => {
-    try {
-      await liquidationService.depositNotifySignatureTimeout(
-        web3Context,
-        depositAddress
-      )
-      showMessage({
-        type: messageType.SUCCESS,
-        title: "Success",
-        content: "Top up committed successfully",
-      })
-    } catch (error) {
-      showMessage({
-        type: messageType.ERROR,
-        title: "Commit action has failed ",
-        content: error.message,
-      })
-      throw error
-    }
-  }
+  // const onLiquidateFromSummaryBtn = async () => {
+  //   try {
+  //     await liquidationService.depositNotifySignatureTimeout(
+  //       web3Context,
+  //       depositAddress
+  //     )
+  //     showMessage({
+  //       type: messageType.SUCCESS,
+  //       title: "Success",
+  //       content: "Top up committed successfully",
+  //     })
+  //   } catch (error) {
+  //     showMessage({
+  //       type: messageType.ERROR,
+  //       title: "Commit action has failed ",
+  //       content: error.message,
+  //     })
+  //     throw error
+  //   }
+  // }
 
     const handleSubmit = async (onTransactionHashCallback) => {
     try {

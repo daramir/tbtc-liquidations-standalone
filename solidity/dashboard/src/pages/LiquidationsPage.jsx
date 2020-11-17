@@ -1,18 +1,21 @@
-import React, { useCallback, useState } from "react"
-import LiquidationEventTimelineElement from "../components/LiquidationEventTimelineElement"
-import { useSubscribeToContractEvent } from "../hooks/useSubscribeToContractEvent"
-import { TBTC_SYSTEM_CONTRACT_NAME } from "../constants/constants"
+import React, {
+  //  useCallback,
+  // useState 
+  } from "react"
+// import LiquidationEventTimelineElement from "../components/LiquidationEventTimelineElement"
+// import { useSubscribeToContractEvent } from "../hooks/useSubscribeToContractEvent"
+// import { TBTC_SYSTEM_CONTRACT_NAME } from "../constants/constants"
 import PageWrapper from "../components/PageWrapper"
-import { liquidationService } from "../services/tbtc-liquidation.service"
-import { useFetchData } from "../hooks/useFetchData"
-import { LoadingOverlay } from "../components/Loadable"
-import DelegatedTokensSkeleton from "../components/skeletons/DelegatedTokensSkeleton"
-import {
-  VerticalTimeline,
-  VerticalTimelineElement,
-} from "react-vertical-timeline-component"
+// import { liquidationService } from "../services/tbtc-liquidation.service"
+// import { useFetchData } from "../hooks/useFetchData"
+// import { LoadingOverlay } from "../components/Loadable"
+// import DelegatedTokensSkeleton from "../components/skeletons/DelegatedTokensSkeleton"
+// import {
+//   VerticalTimeline,
+//   VerticalTimelineElement,
+// } from "react-vertical-timeline-component"
 import "react-vertical-timeline-component/style.min.css"
-import * as Icons from "../components/Icons"
+// import * as Icons from "../components/Icons"
 
 const LiquidationsPage = (props) => {
   // const [redemptionRequestedEvents, setRedemptionReqEvData, refreshRedemptionReqEvData] = useFetchData(
@@ -44,7 +47,7 @@ const LiquidationsPage = (props) => {
   // }
 
   // control number of events displayed for "load older" feature. Initially 10
-  const [eventCountHorizon, setEventCountHorizon] = useState(10)
+  // const [eventCountHorizon, setEventCountHorizon] = useState(10)
 
   // const increaseEventHorizon = () => {
   //   setEventCountHorizon(eventCountHorizon + 10)
