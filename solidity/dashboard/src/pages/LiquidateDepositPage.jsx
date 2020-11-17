@@ -1,21 +1,19 @@
-import React, { useMemo, useCallback, useState, useEffect } from "react"
+import React, { 
+  // useMemo,
+  useCallback, useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import FallingPriceAuctionTable from "../components/FallingPriceAuctionTable"
 import StatusBadge, { BADGE_STATUS } from "../components/StatusBadge"
 import { useTokensPageContext } from "../contexts/TokensPageContext"
 import {
-  ArbitrageurTokenDetails, DepositAuctionOverview
+  // ArbitrageurTokenDetails,
+   DepositAuctionOverview
 } from "../components/DepositLiquidationOverview"
-import { TokenGrantSkeletonOverview } from "../components/skeletons/TokenOverviewSkeleton"
-import AddressShortcut from "../components/AddressShortcut"
-import { isSameEthAddress } from "../utils/general.utils"
-import { add } from "../utils/arithmetics.utils"
 import moment from "moment"
 import { LoadingOverlay } from "../components/Loadable"
 import DataTableSkeleton from "../components/skeletons/DataTableSkeleton"
-import PageWrapper from "../components/PageWrapper"
 import { ViewAddressInBlockExplorer } from "../components/ViewInBlockExplorer"
-import { SubmitButton } from "../components/Button"
+// import { SubmitButton } from "../components/Button"
 import { useShowMessage, messageType } from "../components/Message"
 import { useWeb3Context } from "../components/WithWeb3Context"
 import { liquidationService } from "../services/tbtc-liquidation.service"
@@ -25,23 +23,14 @@ import {
   satsToTBtcViaWeitoshi,
   displayAmount
 } from "../utils/token.utils"
-import { colors } from "../constants/colors"
-
-const filterByOwned = (delegation) => !delegation.grantId
-const filterBySelectedGrant = (selectedGrant) => (delegation) =>
-  selectedGrant.id && delegation.grantId === selectedGrant.id
+// import { colors } from "../constants/colors"
 
 const LiquidateDepositPage = (props) => {
   const {
-    undelegations,
-    delegations,
     tokensContext,
-    selectedGrant,
     isFetching,
     grantsAreFetching,
-    keepTokenBalance,
-    availableTopUps,
-    grants,
+
   } = useTokensPageContext()
 
 
@@ -51,28 +40,6 @@ const LiquidateDepositPage = (props) => {
   const { openConfirmationModal } = useModal()
 
   const [lastRefreshedMoment, setLastRefreshedMoment] = useState(moment())
-
-  useEffect(
-    () => {
-      setTimeout(
-        () => {
-          refreshData()
-          setLastRefreshedMoment(moment())
-          // console.log(`I refreshed at ${moment().toString()}`)
-        },
-        75000
-        // 15000
-      )
-    },
-    [lastRefreshedMoment]
-  )
-  // startRefreshDataTimer()
-
-  const refreshData = () => {
-    refreshCurrentAuctionValue()
-    refreshUserTBtcBalance()
-    refreshDepositState()
-  }
 
   const [stCurrentAuctionValue, , refreshCurrentAuctionValue] = useFetchData(
     liquidationService.getDepositCurrentAuctionValue,
@@ -102,7 +69,6 @@ const LiquidateDepositPage = (props) => {
     data: depositStateObj,
   } = stDepositState
 
-
   const [stAuctionSchedule] = useFetchData(
     liquidationService.getDepositAuctionOfferingSchedule,
     {},
@@ -119,7 +85,7 @@ const LiquidateDepositPage = (props) => {
   )
   const {
     isFetching: lastStartedLiquidationEventIsFetching,
-    data: startedLiquidationEvent,
+    // data: startedLiquidationEvent,
   } = stLastStartedLiquidationEvent
 
   const [stDepositBondAmount] = useFetchData(
@@ -142,22 +108,46 @@ const LiquidateDepositPage = (props) => {
     data: depositSizeSatoshis,
   } = stDepositSizeSatoshis
 
+  const refreshData = useCallback(
+    () => {
+    refreshCurrentAuctionValue()
+    refreshUserTBtcBalance()
+    refreshDepositState()
+  },
+  [refreshCurrentAuctionValue, refreshUserTBtcBalance, refreshDepositState]
+  )
+  useEffect(
+    () => {
+      setTimeout(
+        () => {
+          refreshData()
+          setLastRefreshedMoment(moment())
+          // console.log(`I refreshed at ${moment().toString()}`)
+        },
+        75000
+        // 15000
+      )
+    },
+    [lastRefreshedMoment, refreshData]
+  )
+  // startRefreshDataTimer()
+
   const confirmationModalOptions = useCallback(() => {
-    if (bondAmountIsFetching || depositSizeSatoshisIsFetching)
+    if (currentAuctionValueIsFetching || depositSizeSatoshisIsFetching)
       return {}
     else {
       return {
         modalOptions: { title: "Purchase ETH Bond" },
         title: "You’re about to purchase ETH with tBTC.",
         subtitle:
-          `This transaction will spend ${satsToTBtcViaWeitoshi(depositSizeSatoshis).toString()} tBTC to obtain ${displayAmount(bondAmountWei, false)} ETH (or more, depending on the block it goes through).
+          `This transaction will spend ${satsToTBtcViaWeitoshi(depositSizeSatoshis).toString()} tBTC to obtain ${displayAmount(auctionValueBN, false)} ETH (or more, depending on the block it goes through).
            It can fail if deposit state changes before this transaction gets accepted. 
            Transaction can also fail if you don’t have enough tBTC`,
         btnText: "Purchase ETH",
         confirmationText: "Y",
       }
     }
-  }, [satsToTBtcViaWeitoshi, displayAmount, bondAmountIsFetching, depositSizeSatoshisIsFetching]) 
+  }, [currentAuctionValueIsFetching, depositSizeSatoshisIsFetching, auctionValueBN, depositSizeSatoshis]) 
 
   const getPercentageOnOffer = useCallback(() => {
     const utils = web3Context.web3.utils
@@ -172,39 +162,26 @@ const LiquidateDepositPage = (props) => {
 
   const showMessage = useShowMessage()
 
-  const onLiquidateFromSummaryBtn = async () => {
-    try {
-      // const availableAmount = delegationData.isFromGrant
-      //   ? getAvailableToStakeFromGrant(delegationData.grantId)
-      //   : keepTokenBalance
-      // const { amount } = 19
-      // delegationData.beneficiaryAddress = delegationData.beneficiary
-      // delegationData.stakeTokens = amount
-      // delegationData.selectedGrant = {
-      //   id: delegationData.grantId,
-      //   isManagedGrant: delegationData.isManagedGrant,
-      //   managedGrantContractInstance:
-      //     delegationData.managedGrantContractInstance,
-      // }
-      // delegationData.context = delegationData.isFromGrant ? "granted" : "owned"
-      await liquidationService.depositNotifySignatureTimeout(
-        web3Context,
-        depositAddress
-      )
-      showMessage({
-        type: messageType.SUCCESS,
-        title: "Success",
-        content: "Top up committed successfully",
-      })
-    } catch (error) {
-      showMessage({
-        type: messageType.ERROR,
-        title: "Commit action has failed ",
-        content: error.message,
-      })
-      throw error
-    }
-  }
+  // const onLiquidateFromSummaryBtn = async () => {
+  //   try {
+  //     await liquidationService.depositNotifySignatureTimeout(
+  //       web3Context,
+  //       depositAddress
+  //     )
+  //     showMessage({
+  //       type: messageType.SUCCESS,
+  //       title: "Success",
+  //       content: "Top up committed successfully",
+  //     })
+  //   } catch (error) {
+  //     showMessage({
+  //       type: messageType.ERROR,
+  //       title: "Commit action has failed ",
+  //       content: error.message,
+  //     })
+  //     throw error
+  //   }
+  // }
 
     const handleSubmit = async (onTransactionHashCallback) => {
     try {
@@ -231,7 +208,6 @@ const LiquidateDepositPage = (props) => {
     }
   }
 
-
   //TODO: Fix first section. Conditional should be at a higher level and check if it is a deposit.
   // If it's not in liquidation (has ever been) it will fail startedLiquidationEvent.returnValues
   return (
@@ -239,7 +215,7 @@ const LiquidateDepositPage = (props) => {
     <section>
       <div className="flex wrap self-center mb-2">
         <h2 className="text-grey-70">
-          {satsToTBtcViaWeitoshi(depositSizeSatoshis).toString()}{` tBTC Deposit`}
+          {satsToTBtcViaWeitoshi(depositSizeSatoshis).toString()}{` TBTC Deposit`}
         </h2>
         
         {lastStartedLiquidationEventIsFetching === false && depositStateIsFetching === false && (
@@ -275,65 +251,6 @@ const LiquidateDepositPage = (props) => {
         >
         </DepositAuctionOverview>
       </>
-      {/* <LoadingOverlay
-        isFetching={grantsAreFetching || currentAuctionValueIsFetching || bondAmountIsFetching || userTBtcBalanceIsFetching || depositSizeSatoshisIsFetching || lastStartedLiquidationEventIsFetching}
-        skeletonComponent={<TokenGrantSkeletonOverview />}
-      >
-        <section
-          key={"tokenGrant.id"}
-          className="tile deposit-liquidation-overview"
-          style={{ marginBottom: "1.2rem" }}
-        >
-          <div className="grant-amount">
-            <ArbitrageurTokenDetails title="Your tBTC Balance" selectedGrant={tokenGrant} tokenValue={tBtcBalance} />
-          </div>
-          <div className="unlocking-details">
-            <>
-              <div className="flex-1 self-center">
-                <CircularProgressBars
-                  total={web3Context.web3.utils.toBN(100)
-                    .mul(web3Context.web3.utils.toBN(10).pow(web3Context.web3.utils.toBN(18)))}
-                  items={[
-                    {
-                      value: getPercentageOnOffer()
-                        .mul(web3Context.web3.utils.toBN(10).pow(web3Context.web3.utils.toBN(18))), //TODO: Make sense. Looks like inner function for rendering legend need this as "wei"
-                      color: colors.grey70,
-                      backgroundStroke: colors.grey10,
-                      label: "% On Offer",
-                    },
-                  ]}
-                  withLegend
-                />
-              </div>
-              <div className="ml-2 mt-1 self-start flex-1">
-                <h5 className="text-grey-70">On Offer</h5>
-                <h4 className="text-grey-70">{displayAmount(auctionValueBN, false)}</h4>
-                <div className="text-smaller text-grey-40">
-                  of {displayAmount(bondAmountWei, false)} Total
-              </div>
-              </div>
-            </>
-          </div>
-          <div className="staked-details pl-0">
-            <>
-              <div className="flex-1 self-center">
-                <h4>Liquidate this deposit</h4>
-                <span>Purchase {displayAmount(auctionValueBN, false)} ETH in exchange of {satsToTBtcViaWeitoshi(depositSizeSatoshis).toString()} tBTC</span>
-                <div>
-                  <SubmitButton
-                    className="btn btn-primary btn-sm"
-                    onSubmitAction={(transactionHashCallback) =>
-                      onLiquidateFromSummaryBtn(null, transactionHashCallback)
-                    }
-                  >
-                    Purchase ETH
-                </SubmitButton>
-                </div>
-              </div>
-            </>
-          </div>
-        </section>
-      </LoadingOverlay> */}
 
       <LoadingOverlay
         isFetching={
@@ -345,12 +262,6 @@ const LiquidateDepositPage = (props) => {
           auctionScheduleData={auctionOfferingSchedule}
           // cancelStakeSuccessCallback={cancelStakeSuccessCallback}
         />
-        {/* <DelegatedTokensTable
-          delegatedTokens={getDelegations()}
-          cancelStakeSuccessCallback={cancelStakeSuccessCallback}
-          keepTokenBalance={keepTokenBalance}
-          grants={grants}
-        /> */}
       </LoadingOverlay>
     </section>
     // </PageWrapper>

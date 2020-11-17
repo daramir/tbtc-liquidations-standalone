@@ -4,7 +4,11 @@ section.deposit-liquidation-overview {
     grid-gap: 2rem;
     padding: 0;
 
-    .grant-amount,
+    .span-token-amount {
+        white-space: nowrap;
+    }
+
+    .arb-balance,
     .unlocking-details,
     .staked-details {
         padding: 2rem;
@@ -22,7 +26,7 @@ section.deposit-liquidation-overview {
                              "grid-el-3 grid-el-3";
         
 
-        .grant-amount {
+        .arb-balance {
             border-right: none;
         }
 
@@ -36,11 +40,11 @@ section.deposit-liquidation-overview {
         grid-template-rows: 1fr;
         grid-template-areas: "grid-el-1 grid-el-2 grid-el-3 grid-el-3";
 
-        .grant-amount {
+        .arb-balance {
             border-right: 1px solid @color-grey-30;
         }
 
-        .grant-amount,
+        .arb-balance,
         .unlocking-details,
         .staked-details {
             margin-top: 0;

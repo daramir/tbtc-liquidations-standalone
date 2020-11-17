@@ -198,9 +198,9 @@ const getDepositSizeSatoshis = async (web3Context, depositContractAddress) => {
     web3Context.web3,
     depositContractAddress
   )
-  const depositLotSizeSatoshis = await depositContractInstance.methods
-    .lotSizeSatoshis()
-    .call()
+  // const depositLotSizeSatoshis = await depositContractInstance.methods
+  //   .lotSizeSatoshis()
+  //   .call()
   const depositUtxoValue = await depositContractInstance.methods
     .utxoValue()
     .call()
@@ -310,7 +310,7 @@ const getDepositAuctionOfferingSchedule = async (
 ) => {
   const startedLiquidationEvent = await getLastStartedLiquidationEvent(web3Context, depositContractAddress)
   const startedLiquidationTimestamp = startedLiquidationEvent.returnValues._timestamp
-  const mmtStartedLiquidation = moment.unix(startedLiquidationTimestamp)
+  // const mmtStartedLiquidation = moment.unix(startedLiquidationTimestamp)
 
   //This could go in context
   const tBtcConstantsContract = await getTBTCConstantsContract(web3Context.web3)
